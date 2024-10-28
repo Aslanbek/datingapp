@@ -1,16 +1,18 @@
 package kz.astana.dating.app.controller;
 
+import kz.astana.dating.app.model.Gender;
 import kz.astana.dating.app.model.Profile;
 import kz.astana.dating.app.service.ProfileService;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.util.Optional;
 
 @WebServlet("/profile")
@@ -20,8 +22,10 @@ public class ProfileController extends HttpServlet {
     private final ProfileService service = ProfileService.getInstance();
 
     public void init(ServletConfig config) throws ServletException {
-        this.servletName = config.getServletName();
-        System.out.println("init sevlet " + servletName);
+        ServletContext servletContext = config.getServletContext();
+        if (servletContext.getAttribute("genders") == null) {
+            servletContext.setAttribute("genders", Gender.values());
+        }
     }
 
     @Override
@@ -30,12 +34,33 @@ public class ProfileController extends HttpServlet {
         String forwardUri = "/notFound";
         if (id != null) {
             Optional<Profile> profile = service.findById(Long.parseLong(id));
+
             if (profile.isPresent()) {
                 req.setAttribute("profile", profile.get());
                 forwardUri = "WEB-INF/jsp/profile.jsp";
             }
         }
         req.getRequestDispatcher(forwardUri).forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String sId = req.getParameter("id");
+        Profile profile = new Profile();
+        profile.setEmail(req.getParameter("email"));
+        profile.setName(req.getParameter("name"));
+        profile.setSurname(req.getParameter("surname"));
+        profile.setAbout(req.getParameter("about"));
+        profile.setGender(Gender.valueOf(req.getParameter("gender")));
+        Long id;
+        if (!sId.isBlank()) {
+            id = Long.parseLong(sId);
+            profile.setId(id);
+            service.update(profile);
+        } else {
+            id = service.save(profile).getId();
+        }
+        resp.sendRedirect(String.format("/profile?id=%s", id));
     }
 
     public String save(String request) {

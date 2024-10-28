@@ -1,5 +1,6 @@
 package kz.astana.dating.app.dao;
 
+import kz.astana.dating.app.model.Gender;
 import kz.astana.dating.app.model.Profile;
 
 import java.util.ArrayList;
@@ -15,18 +16,36 @@ public class ProfileDao {
     private final AtomicLong idStorage;
 
     public ProfileDao() {
-        Long ids[] = {1L,2L,3L,4L,5L};
         this.storage = new ConcurrentHashMap<>();
-        for(Long id:ids){
+        //
+        Long ids[] = {1L, 2L, 3L, 4L, 5L};
+        for (Long id : ids) {
             Profile profile = new Profile();
             profile.setId(id);
             profile.setEmail("email" + id + "@gmail.com");
             profile.setName("Name" + id);
             profile.setSurname("Surname" + id);
             profile.setAbout("About" + id);
+            profile.setGender(id % 2 == 0 ? Gender.FEMALE : Gender.OTHER);
             this.storage.put(id, profile);
         }
-        this.idStorage = new AtomicLong(1L);
+        this.idStorage = new AtomicLong(ids.length);
+
+/*        Profile profile = new Profile();
+        profile.setId(1L);
+        profile.setEmail("email1@gmail.com");
+        profile.setName("Name1");
+        profile.setSurname("Surname1");
+        profile.setAbout("About1");
+        this.storage.put(1L, profile);
+        Profile profile2 = new Profile();
+        profile2.setId(2L);
+        profile2.setEmail("email2@gmail.com");
+        profile2.setName("Name2");
+        profile2.setSurname("Surname2");
+        profile2.setAbout("About2");
+        this.storage.put(2L, profile2);
+        this.idStorage = new AtomicLong(3L);*/
     }
 
     public static ProfileDao getInstance() {

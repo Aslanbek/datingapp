@@ -5,8 +5,18 @@ public class Profile {
     private String email;
     private String name;
     private String surname;
+    private String about;
+    private Gender gender;
 
     public Profile() {
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     public String getAbout() {
@@ -17,7 +27,6 @@ public class Profile {
         this.about = about;
     }
 
-    private String about;
 
     public Long getId() {
         return id;
