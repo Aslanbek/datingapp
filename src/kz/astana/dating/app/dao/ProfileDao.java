@@ -4,7 +4,6 @@ import kz.astana.dating.app.model.Gender;
 import kz.astana.dating.app.model.Profile;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;

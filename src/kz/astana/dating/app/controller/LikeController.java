@@ -1,29 +1,21 @@
 package kz.astana.dating.app.controller;
 
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kz.astana.dating.app.service.LikeService;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
+
 
 @WebServlet("/like")
 public class LikeController extends HttpServlet {
 
-    private String servletName;
     private final LikeService likeService = LikeService.getInstance();
-
-    public void init(ServletConfig config) throws ServletException {
-        this.servletName = config.getServletName();
-        System.out.println("init sevlet " + servletName);
-    }
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -62,12 +54,12 @@ public class LikeController extends HttpServlet {
         resp.setContentType("text/html");
         resp.setCharacterEncoding("UTF-8");
         try (PrintWriter writer = resp.getWriter()) {
-            writer.write("<h2><p>" + answer + "</p><br>UserAgent " + UserAgent + "<br>WebServlet " + servletName + "</h2>");
+            writer.write("<h2><p>" + answer + "</p><br>UserAgent " + UserAgent + "<br>WebServlet " + getServletConfig().getServletName() + "</h2>");
         }
     }
 
     @Override
     public void destroy() {
-        System.out.println("destroy servlet " + servletName);
+        System.out.println("destroy servlet ");
     }
 }

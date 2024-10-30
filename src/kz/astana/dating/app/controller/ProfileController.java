@@ -1,18 +1,17 @@
 package kz.astana.dating.app.controller;
 
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kz.astana.dating.app.model.Gender;
 import kz.astana.dating.app.model.Profile;
 import kz.astana.dating.app.service.ProfileService;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.Optional;
 
 @WebServlet("/profile")
@@ -21,12 +20,6 @@ public class ProfileController extends HttpServlet {
 
     private final ProfileService service = ProfileService.getInstance();
 
-    public void init(ServletConfig config) throws ServletException {
-        ServletContext servletContext = config.getServletContext();
-        if (servletContext.getAttribute("genders") == null) {
-            servletContext.setAttribute("genders", Gender.values());
-        }
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -44,23 +37,27 @@ public class ProfileController extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String sId = req.getParameter("id");
-        Profile profile = new Profile();
-        profile.setEmail(req.getParameter("email"));
-        profile.setName(req.getParameter("name"));
-        profile.setSurname(req.getParameter("surname"));
-        profile.setAbout(req.getParameter("about"));
-        profile.setGender(Gender.valueOf(req.getParameter("gender")));
-        Long id;
-        if (!sId.isBlank()) {
-            id = Long.parseLong(sId);
-            profile.setId(id);
-            service.update(profile);
-        } else {
-            id = service.save(profile).getId();
-        }
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+        Profile profile = getProfile(req);
+        Long id = service.save(profile).getId();
         resp.sendRedirect(String.format("/profile?id=%s", id));
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Profile profile = getProfile(req);
+        service.update(profile);
+        resp.sendRedirect(String.format("/profile?id=%s", profile.getId()));
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String sId = req.getParameter("id");
+        if (!sId.isBlank()) {
+            service.delete(Long.parseLong(sId));
+        }
+        resp.sendRedirect("/registration");
     }
 
     public String save(String request) {
@@ -125,5 +122,19 @@ public class ProfileController extends HttpServlet {
 
     public String findAll() {
         return service.findAll().toString();
+    }
+
+    private Profile getProfile(HttpServletRequest req) {
+        Profile profile = new Profile();
+        String sId = req.getParameter("id");
+        if (!sId.isBlank()) {
+            profile.setId(Long.parseLong(sId));
+        }
+        profile.setEmail(req.getParameter("email"));
+        profile.setName(req.getParameter("name"));
+        profile.setSurname(req.getParameter("surname"));
+        profile.setAbout(req.getParameter("about"));
+        profile.setGender(Gender.valueOf(req.getParameter("gender")));
+        return profile;
     }
 }

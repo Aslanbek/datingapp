@@ -9,8 +9,8 @@
 <%@ include file="header.html"%>
 
 <form method="post" action="/profile">
-    <c:if test="${requestScope.profile.id==null}">
-        <h1>Hello new User</h1>
+    <c:if test="${requestScope.profile.id!=null}">
+        <input type="hidden" name="_method" value="PUT">
     </c:if>
     <table>
         <input type="text" name="id" hidden value="${requestScope.profile.id}">
@@ -47,6 +47,14 @@
     </table>
     <button type="submit">save</button>
 </form>
+<c:if test="${requestScope.profile.id!=null}">
+    <form method="post" action="/profile">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="id" value="${requestScope.profile.id}">
+        <button type="submit">delete</button>
+    </form>
+
+</c:if>
 
 <%@ include file="footer.html"%>
 </body>
