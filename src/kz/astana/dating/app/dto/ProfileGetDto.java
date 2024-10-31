@@ -1,8 +1,10 @@
-package kz.astana.dating.app.model;
+package kz.astana.dating.app.dto;
+
+import kz.astana.dating.app.model.Gender;
 
 import java.time.LocalDate;
 
-public class Profile {
+public class ProfileGetDto {
     private Long id;
     private String email;
     private String name;
@@ -11,7 +13,14 @@ public class Profile {
     private LocalDate birthDate;
     private Gender gender;
 
-    public Profile() {
+    private Integer age;
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public LocalDate getBirthDate() {
@@ -21,6 +30,7 @@ public class Profile {
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
+
 
     public Gender getGender() {
         return gender;
@@ -71,14 +81,4 @@ public class Profile {
         this.surname = surname;
     }
 
-    @Override
-    public String toString() {
-        return "Profile{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", about='" + about + '\'' +
-                '}';
-    }
 }

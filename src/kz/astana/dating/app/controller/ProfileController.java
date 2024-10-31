@@ -7,11 +7,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kz.astana.dating.app.dto.ProfileGetDto;
 import kz.astana.dating.app.model.Gender;
 import kz.astana.dating.app.model.Profile;
 import kz.astana.dating.app.service.ProfileService;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @WebServlet("/profile")
@@ -26,12 +28,15 @@ public class ProfileController extends HttpServlet {
         String id = req.getParameter("id");
         String forwardUri = "/notFound";
         if (id != null) {
-            Optional<Profile> profile = service.findById(Long.parseLong(id));
+            Optional<ProfileGetDto> optionalProfileGetDto = service.findById(Long.parseLong(id));
 
-            if (profile.isPresent()) {
-                req.setAttribute("profile", profile.get());
+            if (optionalProfileGetDto.isPresent()) {
+                req.setAttribute("profile", optionalProfileGetDto.get());
                 forwardUri = "WEB-INF/jsp/profile.jsp";
             }
+        } else {
+            req.setAttribute("profiles", service.findAll());
+            forwardUri = "WEB-INF/jsp/profiles.jsp";
         }
         req.getRequestDispatcher(forwardUri).forward(req, resp);
     }
@@ -40,7 +45,7 @@ public class ProfileController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         Profile profile = getProfile(req);
-        Long id = service.save(profile).getId();
+        Long id = service.save(profile);
         resp.sendRedirect(String.format("/profile?id=%s", id));
     }
 
@@ -115,7 +120,7 @@ public class ProfileController extends HttpServlet {
         } catch (NumberFormatException e) {
             return "Bad request: cant parse string[" + strings[0] + "] to long";
         }
-        Optional<Profile> maybeProfile = service.findById(id);
+        Optional<ProfileGetDto> maybeProfile = service.findById(id);
         if (maybeProfile.isEmpty()) return "not found";
         return maybeProfile.get().toString();
     }
@@ -134,6 +139,7 @@ public class ProfileController extends HttpServlet {
         profile.setName(req.getParameter("name"));
         profile.setSurname(req.getParameter("surname"));
         profile.setAbout(req.getParameter("about"));
+        profile.setBirthDate(LocalDate.parse(req.getParameter("birthDate")));
         profile.setGender(Gender.valueOf(req.getParameter("gender")));
         return profile;
     }

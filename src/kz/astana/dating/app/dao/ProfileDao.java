@@ -3,8 +3,10 @@ package kz.astana.dating.app.dao;
 import kz.astana.dating.app.model.Gender;
 import kz.astana.dating.app.model.Profile;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -26,6 +28,7 @@ public class ProfileDao {
             profile.setSurname("Surname" + id);
             profile.setAbout("About" + id);
             profile.setGender(id % 2 == 0 ? Gender.FEMALE : Gender.OTHER);
+            profile.setBirthDate(LocalDate.now().minusYears(20 - id));
             this.storage.put(id, profile);
         }
         this.idStorage = new AtomicLong(ids.length);
