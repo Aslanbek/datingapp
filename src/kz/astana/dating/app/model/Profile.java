@@ -10,8 +10,26 @@ public class Profile {
     private String about;
     private LocalDate birthDate;
     private Gender gender;
+    private Status status;
+    private String password;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public Profile() {
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public LocalDate getBirthDate() {

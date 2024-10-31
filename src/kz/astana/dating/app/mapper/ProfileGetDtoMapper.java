@@ -20,16 +20,22 @@ public class ProfileGetDtoMapper implements Mapper<Profile, ProfileGetDto> {
     }
 
     @Override
-    public ProfileGetDto map(Profile profile) {
-        ProfileGetDto dto = new ProfileGetDto();
-        dto.setId(profile.getId());
-        dto.setName(profile.getName());
-        dto.setEmail(profile.getEmail());
-        dto.setSurname(profile.getSurname());
-        dto.setAbout(profile.getAbout());
-        dto.setGender(profile.getGender());
-        dto.setBirthDate(profile.getBirthDate());
-        dto.setAge(Math.toIntExact(ChronoUnit.YEARS.between(profile.getBirthDate(), LocalDate.now())));
-        return dto;
+    public ProfileGetDto map(Profile profile, ProfileGetDto dto) {
+        ProfileGetDto result = dto;
+        if (result == null) {
+            result = new ProfileGetDto();
+        }
+        result.setId(profile.getId());
+        result.setName(profile.getName());
+        result.setEmail(profile.getEmail());
+        result.setSurname(profile.getSurname());
+        result.setAbout(profile.getAbout());
+        result.setGender(profile.getGender());
+        result.setBirthDate(profile.getBirthDate());
+        if (profile.getBirthDate() != null) {
+            result.setAge(Math.toIntExact(ChronoUnit.YEARS.between(profile.getBirthDate(), LocalDate.now())));
+        }
+        result.setStatus(profile.getStatus());
+        return result;
     }
 }

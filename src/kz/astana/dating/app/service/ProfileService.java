@@ -23,13 +23,13 @@ public class ProfileService {
 
     }
 
-    public Long save(Profile profile) {
+    public Long save(ProfileGetDto profile) {
         return dao.save(profile).getId();
     }
 
     public Optional<ProfileGetDto> findById(Long id) {
         if (id == null) return Optional.empty();
-        return dao.findById(id).map(profileGetDtoMapper::map);
+        return dao.findById(id);
     }
 
     public boolean delete(Long id) {
@@ -37,11 +37,11 @@ public class ProfileService {
         return dao.delete(id);
     }
 
-    public void update(Profile profile) {
+    public void update(ProfileGetDto profile) {
         dao.update(profile);
     }
 
     public List<ProfileGetDto> findAll() {
-        return dao.findAll().stream().map(profileGetDtoMapper::map).toList();
+        return dao.findAll();
     }
 }

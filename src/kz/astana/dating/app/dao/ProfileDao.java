@@ -1,7 +1,10 @@
 package kz.astana.dating.app.dao;
 
+import kz.astana.dating.app.dto.ProfileGetDto;
+import kz.astana.dating.app.mapper.ProfileGetDtoMapper;
 import kz.astana.dating.app.model.Gender;
 import kz.astana.dating.app.model.Profile;
+import kz.astana.dating.app.model.Status;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,7 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class ProfileDao {
     private static final ProfileDao INSTANCE = new ProfileDao();
-    private final ConcurrentHashMap<Long, Profile> storage;
+    private final ConcurrentHashMap<Long, ProfileGetDto> storage;
     private final AtomicLong idStorage;
 
     public ProfileDao() {
@@ -28,33 +31,18 @@ public class ProfileDao {
             profile.setSurname("Surname" + id);
             profile.setAbout("About" + id);
             profile.setGender(id % 2 == 0 ? Gender.FEMALE : Gender.OTHER);
+            profile.setStatus(id % 2 == 0 ? Status.ACTIVE : Status.INACTIVE);
             profile.setBirthDate(LocalDate.now().minusYears(20 - id));
-            this.storage.put(id, profile);
+            this.storage.put(id, ProfileGetDtoMapper.getInstance().map(profile));
         }
         this.idStorage = new AtomicLong(ids.length);
-
-/*        Profile profile = new Profile();
-        profile.setId(1L);
-        profile.setEmail("email1@gmail.com");
-        profile.setName("Name1");
-        profile.setSurname("Surname1");
-        profile.setAbout("About1");
-        this.storage.put(1L, profile);
-        Profile profile2 = new Profile();
-        profile2.setId(2L);
-        profile2.setEmail("email2@gmail.com");
-        profile2.setName("Name2");
-        profile2.setSurname("Surname2");
-        profile2.setAbout("About2");
-        this.storage.put(2L, profile2);
-        this.idStorage = new AtomicLong(3L);*/
     }
 
     public static ProfileDao getInstance() {
         return INSTANCE;
     }
 
-    public Profile save(Profile profile) {
+    public ProfileGetDto save(ProfileGetDto profile) {
         long id = idStorage.incrementAndGet();
         profile.setId(id);
         storage.put(id, profile);
@@ -62,7 +50,7 @@ public class ProfileDao {
         return profile;
     }
 
-    public Optional<Profile> findById(Long id) {
+    public Optional<ProfileGetDto> findById(Long id) {
         return Optional.ofNullable(storage.get(id));
     }
 
@@ -70,13 +58,13 @@ public class ProfileDao {
         return storage.remove(id) != null;
     }
 
-    public void update(Profile profile) {
+    public void update(ProfileGetDto profile) {
         Long id = profile.getId();
         if (id == null) return;
         storage.put(id, profile);
     }
 
-    public List<Profile> findAll() {
+    public List<ProfileGetDto> findAll() {
         return new ArrayList<>(storage.values());
     }
 

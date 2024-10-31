@@ -14,12 +14,11 @@ import kz.astana.dating.app.service.ProfileService;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 @WebServlet("/profile")
 public class ProfileController extends HttpServlet {
-    private String servletName;
-
     private final ProfileService service = ProfileService.getInstance();
 
 
@@ -44,14 +43,14 @@ public class ProfileController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        Profile profile = getProfile(req);
-        Long id = service.save(profile);
+        ProfileGetDto profileGetDto = getProfileGetDto(req);
+        Long id = service.save(profileGetDto);
         resp.sendRedirect(String.format("/profile?id=%s", id));
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Profile profile = getProfile(req);
+        ProfileGetDto profile = getProfileGetDto(req);
         service.update(profile);
         resp.sendRedirect(String.format("/profile?id=%s", profile.getId()));
     }
@@ -65,7 +64,7 @@ public class ProfileController extends HttpServlet {
         resp.sendRedirect("/registration");
     }
 
-    public String save(String request) {
+/*    public String save(String request) {
         String[] params = request.split(",");
         if (params.length < 4) return "bad request";
         Profile profile = new Profile();
@@ -75,10 +74,10 @@ public class ProfileController extends HttpServlet {
         profile.setSurname(params[2]);
         profile.setAbout(params[3]);
         return service.save(profile).toString();
-    }
+    }*/
 
 
-    public String update(String request) {
+/*    public String update(String request) {
         String[] strings = request.split(",");
         if (strings.length != 5) return "Bad request: need 5 params";
         long id;
@@ -95,9 +94,9 @@ public class ProfileController extends HttpServlet {
         profile.setAbout(strings[4]);
         service.update(profile);
         return "update success";
-    }
+    }*/
 
-    public String delete(String request) {
+/*    public String delete(String request) {
         String[] strings = request.split(",");
         if (strings.length != 1) return "Bad request: need one param";
         long id;
@@ -109,9 +108,9 @@ public class ProfileController extends HttpServlet {
         boolean result = service.delete(id);
         if (!result) return "not found";
         return "delete success";
-    }
+    }*/
 
-    public String findById(String request) {
+/*    public String findById(String request) {
         String[] strings = request.split(",");
         if (strings.length != 1) return "Bad request: need one param";
         long id;
@@ -123,13 +122,13 @@ public class ProfileController extends HttpServlet {
         Optional<ProfileGetDto> maybeProfile = service.findById(id);
         if (maybeProfile.isEmpty()) return "not found";
         return maybeProfile.get().toString();
-    }
+    }*/
 
-    public String findAll() {
+/*    public String findAll() {
         return service.findAll().toString();
-    }
+    }*/
 
-    private Profile getProfile(HttpServletRequest req) {
+/*    private Profile getProfile(HttpServletRequest req) {
         Profile profile = new Profile();
         String sId = req.getParameter("id");
         if (!sId.isBlank()) {
@@ -142,5 +141,21 @@ public class ProfileController extends HttpServlet {
         profile.setBirthDate(LocalDate.parse(req.getParameter("birthDate")));
         profile.setGender(Gender.valueOf(req.getParameter("gender")));
         return profile;
+    }*/
+
+    private ProfileGetDto getProfileGetDto(HttpServletRequest req) {
+        ProfileGetDto dto = new ProfileGetDto();
+        String sId = req.getParameter("id");
+        if (!sId.isBlank()) {
+            dto.setId(Long.parseLong(sId));
+        }
+        dto.setEmail(req.getParameter("email"));
+        dto.setName(req.getParameter("name"));
+        dto.setSurname(req.getParameter("surname"));
+        dto.setAbout(req.getParameter("about"));
+        dto.setBirthDate(LocalDate.parse(req.getParameter("birthDate")));
+        dto.setGender(Gender.valueOf(req.getParameter("gender")));
+        dto.setAge(Math.toIntExact(ChronoUnit.YEARS.between(LocalDate.parse(req.getParameter("birthDate")), LocalDate.now())));
+        return dto;
     }
 }

@@ -1,6 +1,7 @@
 package kz.astana.dating.app.dto;
 
 import kz.astana.dating.app.model.Gender;
+import kz.astana.dating.app.model.Status;
 
 import java.time.LocalDate;
 
@@ -14,6 +15,16 @@ public class ProfileGetDto {
     private Gender gender;
 
     private Integer age;
+
+    private Status status;
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public Integer getAge() {
         return age;
