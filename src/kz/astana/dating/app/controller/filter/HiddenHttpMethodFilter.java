@@ -41,12 +41,6 @@ public class HiddenHttpMethodFilter implements Filter {
     }
 
 
-
-    @Override
-    public void destroy() {
-
-    }
-
     /**
      * Simple {@link HttpServletRequest} wrapper that returns the supplied
      * method for {@link HttpServletRequest#getMethod()}.

@@ -5,7 +5,7 @@ import kz.astana.dating.app.model.Status;
 
 import java.time.LocalDate;
 
-public class ProfileSaveDto {
+public class ProfileUpdateDto {
     private Long id;
     private String email;
     private String name;

@@ -1,25 +1,23 @@
 package kz.astana.dating.app.controller;
 
-
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kz.astana.dating.app.dto.ProfileGetDto;
 import kz.astana.dating.app.dto.ProfileUpdateDto;
 import kz.astana.dating.app.mapper.RequestToProfileUpdateDtoMapper;
+import kz.astana.dating.app.model.exception.DuplicateEmailException;
 import kz.astana.dating.app.service.ProfileService;
 
 import java.io.IOException;
 import java.util.Optional;
 
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
-@WebServlet("/profile")
-public class ProfileController extends HttpServlet {
+public class EmailController extends HttpServlet {
     private final ProfileService service = ProfileService.getInstance();
-
     private final RequestToProfileUpdateDtoMapper requestToProfileUpdateDtoMapper = RequestToProfileUpdateDtoMapper.getInstance();
 
     @Override
@@ -31,7 +29,7 @@ public class ProfileController extends HttpServlet {
 
             if (optProfileDto.isPresent()) {
                 req.setAttribute("profile", optProfileDto.get());
-                forwardUri = "WEB-INF/jsp/profile.jsp";
+                forwardUri = "WEB-INF/jsp/email.jsp";
             }
         } else {
             req.setAttribute("profiles", service.findAll());
@@ -45,10 +43,13 @@ public class ProfileController extends HttpServlet {
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        ProfileUpdateDto dto = requestToProfileUpdateDtoMapper.map(req);
-        service.update(dto);
-        String referer = req.getHeader("referer");
-        resp.sendRedirect(referer);
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ProfileUpdateDto dto = requestToProfileUpdateDtoMapper.map(req, new ProfileUpdateDto());
+        try {
+            service.update(dto);
+            resp.sendRedirect(String.format("/profile?id=%s", dto.getId()));
+        } catch (DuplicateEmailException e) {
+            resp.sendError(SC_BAD_REQUEST);
+        }
     }
 }

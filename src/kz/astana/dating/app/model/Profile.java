@@ -89,14 +89,4 @@ public class Profile {
         this.surname = surname;
     }
 
-    @Override
-    public String toString() {
-        return "Profile{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", about='" + about + '\'' +
-                '}';
-    }
 }

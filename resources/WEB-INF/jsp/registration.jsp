@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <head>
     <title>Charm Registration</title>
+    <%@ include file="style.html" %>
 </head>
 <body>
 <%@ include file="header.jsp" %>
