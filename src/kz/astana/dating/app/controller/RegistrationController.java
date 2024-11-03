@@ -10,11 +10,15 @@ import kz.astana.dating.app.dto.RegistrationDto;
 import kz.astana.dating.app.mapper.RequestToRegistrationDtoMapper;
 import kz.astana.dating.app.model.Profile;
 import kz.astana.dating.app.service.ProfileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 @WebServlet("/registration")
 public class RegistrationController extends HttpServlet {
+
+    private static final Logger log = LoggerFactory.getLogger(RegistrationController.class);
     private final ProfileService service = ProfileService.getInstance();
 
     private final RequestToRegistrationDtoMapper requestToRegistrationDtoMapper = RequestToRegistrationDtoMapper.getInstance();
@@ -27,6 +31,7 @@ public class RegistrationController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RegistrationDto dto = requestToRegistrationDtoMapper.map(req);
+        log.trace("Profile created with email {}", dto.getEmail());
         Long id = service.save(dto);
         resp.sendRedirect(String.format("/profile?id=%s", id));
     }

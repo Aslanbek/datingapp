@@ -36,6 +36,9 @@ public class ProfileService {
     }
 
     public Optional<ProfileGetDto> findById(Long id) {
+/*        if(true){
+            throw new RuntimeException("expect");
+        }*/
         return dao.findById(id).map(profileToProfileGetDtoMapper::map);
     }
 

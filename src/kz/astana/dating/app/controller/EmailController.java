@@ -5,19 +5,24 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kz.astana.dating.app.controller.filter.ErrorFilter;
 import kz.astana.dating.app.dto.ProfileGetDto;
 import kz.astana.dating.app.dto.ProfileUpdateDto;
 import kz.astana.dating.app.mapper.RequestToProfileUpdateDtoMapper;
 import kz.astana.dating.app.model.exception.DuplicateEmailException;
 import kz.astana.dating.app.service.ProfileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Optional;
 
 import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+
 @WebServlet("/email")
 public class EmailController extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(EmailController.class);
     private final ProfileService service = ProfileService.getInstance();
     private final RequestToProfileUpdateDtoMapper requestToProfileUpdateDtoMapper = RequestToProfileUpdateDtoMapper.getInstance();
 
@@ -48,6 +53,7 @@ public class EmailController extends HttpServlet {
         ProfileUpdateDto dto = requestToProfileUpdateDtoMapper.map(req, new ProfileUpdateDto());
         try {
             service.update(dto);
+            log.info("email {} was changed in profile id {}", dto.getEmail(), dto.getId());
             resp.sendRedirect(String.format("/profile?id=%s", dto.getId()));
         } catch (DuplicateEmailException e) {
             resp.sendError(SC_BAD_REQUEST);
