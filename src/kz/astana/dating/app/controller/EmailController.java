@@ -11,8 +11,7 @@ import kz.astana.dating.app.dto.ProfileUpdateDto;
 import kz.astana.dating.app.mapper.RequestToProfileUpdateDtoMapper;
 import kz.astana.dating.app.model.exception.DuplicateEmailException;
 import kz.astana.dating.app.service.ProfileService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -21,8 +20,8 @@ import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
 @WebServlet("/email")
+@Slf4j
 public class EmailController extends HttpServlet {
-    private static final Logger log = LoggerFactory.getLogger(EmailController.class);
     private final ProfileService service = ProfileService.getInstance();
     private final RequestToProfileUpdateDtoMapper requestToProfileUpdateDtoMapper = RequestToProfileUpdateDtoMapper.getInstance();
 

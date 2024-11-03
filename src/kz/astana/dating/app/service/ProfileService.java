@@ -8,12 +8,15 @@ import kz.astana.dating.app.mapper.ProfileToProfileGetDtoMapper;
 import kz.astana.dating.app.mapper.ProfileUpdateDtoToProfileMapper;
 import kz.astana.dating.app.mapper.RegistrationDtoToProfileMapper;
 import kz.astana.dating.app.model.exception.DuplicateEmailException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProfileService {
 
     private static final ProfileService INSTANCE = new ProfileService();
@@ -21,10 +24,6 @@ public class ProfileService {
     private final ProfileToProfileGetDtoMapper profileToProfileGetDtoMapper = ProfileToProfileGetDtoMapper.getInstance();
     private final ProfileUpdateDtoToProfileMapper profileUpdateDtoToProfileMapper = ProfileUpdateDtoToProfileMapper.getInstance();
     private final RegistrationDtoToProfileMapper registrationDtoToProfileMapper = RegistrationDtoToProfileMapper.getInstance();
-
-    public ProfileService() {
-
-    }
 
     public static ProfileService getInstance() {
         return INSTANCE;
