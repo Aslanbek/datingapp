@@ -20,7 +20,7 @@
         <c:forEach var="profile" items="${requestScope.profiles}">
             <tr>
                 <td><h4>${profile.id}</h4></td>
-                <td><h4>${profile.email}</h4></td>
+                <td><h4><a href="/profile?id=${profile.id}">${profile.email}</a></h4></td>
                 <td><h4>${profile.name}</h4></td>
                 <td><h4>${profile.surname}</h4></td>
                 <td><h4>${profile.age}</h4></td>

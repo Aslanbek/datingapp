@@ -1,6 +1,7 @@
 package kz.astana.dating.app.controller;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
-
+@WebServlet("/email")
 public class EmailController extends HttpServlet {
     private final ProfileService service = ProfileService.getInstance();
     private final RequestToProfileUpdateDtoMapper requestToProfileUpdateDtoMapper = RequestToProfileUpdateDtoMapper.getInstance();

@@ -21,7 +21,7 @@ public class WordBundle {
     public String getWord(String key) {
         String result;
         try {
-            result = resourceBundle.getString(key).toLowerCase();
+            result = resourceBundle.getString(key.toLowerCase());
         } catch (MissingResourceException | ClassCastException e) {
             result = key;
         } catch (NullPointerException e) {
