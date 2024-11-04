@@ -15,8 +15,6 @@ public class ProfileGetDto {
     private String about;
     private LocalDate birthDate;
     private Gender gender;
-
     private Integer age;
-
     private Status status;
 }

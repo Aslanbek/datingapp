@@ -2,10 +2,12 @@ package kz.astana.dating.app.mapper;
 
 import kz.astana.dating.app.dto.ProfileGetDto;
 import kz.astana.dating.app.model.Profile;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+@Slf4j
 public class ProfileToProfileGetDtoMapper implements Mapper<Profile, ProfileGetDto> {
     private static final ProfileToProfileGetDtoMapper INSTANCE = new ProfileToProfileGetDtoMapper();
 
@@ -33,6 +35,7 @@ public class ProfileToProfileGetDtoMapper implements Mapper<Profile, ProfileGetD
         dto.setAbout(profile.getAbout());
         dto.setGender(profile.getGender());
         dto.setStatus(profile.getStatus());
+        log.info("Convert Profile {} To ProfileGetDto {}", profile.toString(), dto.toString());
         return dto;
     }
 }

@@ -27,13 +27,14 @@ public class RegistrationController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("WEB-INF/jsp/registration.jsp").forward(req, resp);
+        log.info("Somebody open registration page from {}", req.getHeader("User-Agent"));
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RegistrationDto dto = requestToRegistrationDtoMapper.map(req);
-        log.trace("Profile created with email {}", dto.getEmail());
         Long id = service.save(dto);
+        log.trace("Profile {} created with email {}", id, dto.getEmail());
         resp.sendRedirect(String.format("/profile?id=%s", id));
     }
 
@@ -42,6 +43,7 @@ public class RegistrationController extends HttpServlet {
         String sId = req.getParameter("id");
         if (!sId.isBlank()) {
             service.delete(Long.parseLong(sId));
+            log.info("profile {} is deleted", sId);
         }
         resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
         resp.sendRedirect("/registration");

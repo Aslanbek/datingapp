@@ -28,6 +28,7 @@ public class EmailController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String sId = req.getParameter("id");
+        log.info("Class {} method doGet profile id {}", EmailController.class, sId);
         String forwardUri = null;
         if (sId != null) {
             Optional<ProfileGetDto> optProfileDto = service.findById(Long.parseLong(sId));

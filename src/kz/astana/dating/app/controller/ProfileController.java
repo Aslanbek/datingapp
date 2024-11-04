@@ -10,6 +10,7 @@ import kz.astana.dating.app.dto.ProfileGetDto;
 import kz.astana.dating.app.dto.ProfileUpdateDto;
 import kz.astana.dating.app.mapper.RequestToProfileUpdateDtoMapper;
 import kz.astana.dating.app.service.ProfileService;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
 @WebServlet("/profile")
+@Slf4j
 public class ProfileController extends HttpServlet {
     private final ProfileService service = ProfileService.getInstance();
 
@@ -48,6 +50,7 @@ public class ProfileController extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ProfileUpdateDto dto = requestToProfileUpdateDtoMapper.map(req);
         service.update(dto);
+        log.info("profile {} has been updated", dto.getId());
         String referer = req.getHeader("referer");
         resp.sendRedirect(referer);
     }

@@ -2,7 +2,9 @@ package kz.astana.dating.app.mapper;
 
 import kz.astana.dating.app.dto.ProfileUpdateDto;
 import kz.astana.dating.app.model.Profile;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ProfileUpdateDtoToProfileMapper implements Mapper<ProfileUpdateDto, Profile> {
     private static final ProfileUpdateDtoToProfileMapper INSTANCE = new ProfileUpdateDtoToProfileMapper();
 
@@ -41,6 +43,8 @@ public class ProfileUpdateDtoToProfileMapper implements Mapper<ProfileUpdateDto,
         if (dto.getStatus() != null) {
             profile.setStatus(dto.getStatus());
         }
+
+        log.info(" ProfileUpdateDto  {} To Profile {}", dto.toString(), profile.toString());
         return profile;
     }
 }
