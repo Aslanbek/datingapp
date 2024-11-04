@@ -10,6 +10,9 @@ import kz.astana.dating.app.dto.ProfileGetDto;
 import kz.astana.dating.app.dto.ProfileUpdateDto;
 import kz.astana.dating.app.mapper.RequestToProfileUpdateDtoMapper;
 import kz.astana.dating.app.service.ProfileService;
+import kz.astana.dating.app.validator.ProfileUpdateValidator;
+import kz.astana.dating.app.validator.RegistrationValidator;
+import kz.astana.dating.app.validator.ValidationResult;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -21,6 +24,7 @@ import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 @Slf4j
 public class ProfileController extends HttpServlet {
     private final ProfileService service = ProfileService.getInstance();
+    private final ProfileUpdateValidator profileFieldsValidator = ProfileUpdateValidator.getInstance();
 
     private final RequestToProfileUpdateDtoMapper requestToProfileUpdateDtoMapper = RequestToProfileUpdateDtoMapper.getInstance();
 
@@ -47,11 +51,18 @@ public class ProfileController extends HttpServlet {
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         ProfileUpdateDto dto = requestToProfileUpdateDtoMapper.map(req);
-        service.update(dto);
-        log.info("profile {} has been updated", dto.getId());
-        String referer = req.getHeader("referer");
-        resp.sendRedirect(referer);
+        ValidationResult result = profileFieldsValidator.validate(dto);
+        if (!result.isValid()) {
+            req.setAttribute("errors", result.getErrors());
+            doGet(req, resp);
+        } else {
+            service.update(dto);
+            log.info("profile {} has been updated", dto.getId());
+            String referer = req.getHeader("referer");
+            resp.sendRedirect(referer);
+        }
+
     }
 }

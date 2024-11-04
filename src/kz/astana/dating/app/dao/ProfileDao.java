@@ -29,6 +29,7 @@ public class ProfileDao {
             profile.setGender(id % 2 == 0 ? Gender.FEMALE : Gender.OTHER);
             profile.setStatus(id % 2 == 0 ? Status.ACTIVE : Status.INACTIVE);
             profile.setBirthDate(LocalDate.now().minusYears(20 - id));
+            profile.setPassword(String.valueOf(ids + "" + ids + "" + ids));
             this.storage.put(id, profile);
         }
         this.idStorage = new AtomicLong(ids.length);

@@ -48,22 +48,12 @@ public class ProfileService {
     public void update(ProfileUpdateDto dto) {
         dao.findById(dto.getId())
                 .ifPresent(profile -> {
-                    checkEmail(profile.getEmail(), dto.getEmail());
                     dao.update(profileUpdateDtoToProfileMapper.map(dto, profile));
                 });
     }
 
     public boolean delete(Long id) {
         return dao.delete(id);
-    }
-
-    private void checkEmail(String oldEmail, String newEmail) {
-        if (newEmail == null) return;
-        Set<String> emails = dao.getAllEmails();
-        if (!Objects.equals(oldEmail, newEmail) &&
-                emails.contains(newEmail)) {
-            throw new DuplicateEmailException();
-        }
     }
 
 }

@@ -2,14 +2,14 @@ package kz.astana.dating.app.mapper;
 
 import kz.astana.dating.app.dto.ProfileUpdateDto;
 import kz.astana.dating.app.model.Profile;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProfileUpdateDtoToProfileMapper implements Mapper<ProfileUpdateDto, Profile> {
     private static final ProfileUpdateDtoToProfileMapper INSTANCE = new ProfileUpdateDtoToProfileMapper();
-
-    private ProfileUpdateDtoToProfileMapper() {
-    }
 
     public static ProfileUpdateDtoToProfileMapper getInstance() {
         return INSTANCE;

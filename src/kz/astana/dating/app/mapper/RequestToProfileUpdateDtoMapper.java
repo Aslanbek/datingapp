@@ -4,16 +4,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import kz.astana.dating.app.dto.ProfileUpdateDto;
 import kz.astana.dating.app.model.Gender;
 import kz.astana.dating.app.model.Status;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 import static kz.astana.dating.app.utils.StringUtils.isBlank;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RequestToProfileUpdateDtoMapper implements Mapper<HttpServletRequest, ProfileUpdateDto> {
     private static final RequestToProfileUpdateDtoMapper INSTANCE = new RequestToProfileUpdateDtoMapper();
-
-    private RequestToProfileUpdateDtoMapper() {
-    }
 
     public static RequestToProfileUpdateDtoMapper getInstance() {
         return INSTANCE;

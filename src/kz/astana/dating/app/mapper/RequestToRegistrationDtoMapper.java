@@ -2,12 +2,12 @@ package kz.astana.dating.app.mapper;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kz.astana.dating.app.dto.RegistrationDto;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RequestToRegistrationDtoMapper implements Mapper<HttpServletRequest, RegistrationDto> {
     private static final RequestToRegistrationDtoMapper INSTANCE = new RequestToRegistrationDtoMapper();
-
-    private RequestToRegistrationDtoMapper() {
-    }
 
     public static RequestToRegistrationDtoMapper getInstance() {
         return INSTANCE;
